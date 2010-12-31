@@ -20,7 +20,13 @@ class CompositeReadIOTest < Test::Unit::TestCase
       assert_equal "\x86\xE3\x83\x95\xE3\x82\xA1\xE3\x82\xA4\xE3\x83\xAB\n", @io.read
     end
   end
-  
+  def test_seek_to_head
+    seeked_io =  StringIO.new('the ')
+    seeked_io.seek(2)
+    @io = CompositeReadIO.new(CompositeReadIO.new(seeked_io, StringIO.new('quick ')),
+            StringIO.new('brown '), StringIO.new('fox'))
+    assert_equal 'the quick brown fox', @io.read(32)
+  end
   
   def test_partial_read
     assert_equal 'the quick', @io.read(9)

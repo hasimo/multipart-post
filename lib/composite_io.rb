@@ -17,6 +17,7 @@ class CompositeReadIO
   # respond to #read in a manner consistent with IO.
   def initialize(*ios)
     @ios = ios.flatten
+    @ios.each {|io| io.rewind if io.respond_to?(:rewind)}
   end
 
   # Read from the IO object, overlapping across underlying streams as necessary.
